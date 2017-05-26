@@ -3,24 +3,26 @@ import sys
 import os
 import argparse
 import subprocess
-from pprint import pprint
 
-libDir = os.path.dirname(os.path.realpath(__file__))
+libDir = os.path.dirname(os.path.realpath(__file__));
+SUB_PARSER_NAME = 'subparser_name';
 
 def callCmd(name, args):
 	cmdPath = libDir+"/"+name+"/"+name+".py";
-	subprocess.call(["python", cmdPath, args]);
+	print args;
+	sys.exit();
+	#subprocess.call(["python", cmdPath, args]);
 	
 def callReverse(args):
 	callCmd(name='reverse', args=args);
 
-parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native')
-#subparsers = parser.add_subparsers([title][, description][, prog][, parser_class][, action][, option_string][, dest][, help][, metavar])
-subparsers = parser.add_subparsers(title='Reverse', help='ADB Reverse', metavar='reverse')
+parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
+subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME);
 
 # create the parser for the "reverse" command
-parser_rev = subparsers.add_parser('reverse', prog='Reverse', help='Call adb reverse tcp:PORT tcp:PORT')
-parser_rev.add_argument('--port','-p', action='store', default='8081', help='port to reverse')
+parser_rev = subparser.add_parser('reverse', prog='Reverse', help='Call adb reverse PROTOCOL:PORT PROTOCOL:PORT');
+parser_rev.add_argument('--port','-p', action='store', default='8081', help='port to reverse');
+parser_rev.add_argument('--protocol', action='store', default='tcp', help='port to reverse');
 
-args = parser.parse_args()
-pprint(args);
+args = parser.parse_args();
+callCmd(name=args.subparser_name, args=args);
