@@ -4,25 +4,48 @@ import os
 import argparse
 import subprocess
 
+from CommandHelper import Command,Option,CommandList
+
 libDir = os.path.dirname(os.path.realpath(__file__));
 SUB_PARSER_NAME = 'subparser_name';
 
-def callCmd(name, args):
-	cmdPath = libDir+"/"+name+"/"+name+".py";
-	print args;
-	sys.exit();
-	#subprocess.call(["python", cmdPath, args]);
+def callCmd(cmd, ns):
+	cmdPath = libDir+"/"+cmd.name+"/"+cmd.name+".py";
+	commandList =["python", cmdPath];
 	
-def callReverse(args):
-	callCmd(name='reverse', args=args);
-
+	for opt in cmd.options:
+		try:
+			name = opt.name.replace('-', '');
+			value = ns[name];
+			commandList.append(opt.getName()+' '+value);
+		except Exception as e:
+			print opt.name+' do not exists'
+			print e;
+	
+	print commandList;
+	subprocess.call(commandList);
+	
 parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
 subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME);
 
-# create the parser for the "reverse" command
-parser_rev = subparser.add_parser('reverse', prog='Reverse', help='Call adb reverse PROTOCOL:PORT PROTOCOL:PORT');
-parser_rev.add_argument('--port','-p', action='store', default='8081', help='port to reverse');
-parser_rev.add_argument('--protocol', action='store', default='tcp', help='port to reverse');
+cmdList = CommandList();
+
+cmdReverse = Command('reverse', 'Reverse', 'Call adb reverse PROTOCOL:PORT PROTOCOL:PORT');
+cmdReverse.addOption('port', '8081', 'port to reverse');
+cmdReverse.addOption('protocol', 'tcp', 'protocol to reverse');
+cmdList.add(cmdReverse);
+
+for cmd in cmdList.list :
+	subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help);
+	for opt in cmd.options :
+		subCmd.add_argument(opt.getName(), action='store', default=opt.default, help=opt.help);
+
 
 args = parser.parse_args();
-callCmd(name=args.subparser_name, args=args);
+selected = cmdList.find(args.subparser_name);
+
+if selected!=None :
+	ns = vars(args);
+	callCmd(selected, ns);
+else :
+	print 'Ops!';
