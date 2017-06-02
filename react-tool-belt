@@ -22,7 +22,7 @@ def callCmd(cmd, ns):
 			print opt.name+' do not exists'
 			print e;
 	
-	print commandList;
+	#print commandList;
 	subprocess.call(commandList);
 	
 parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
