@@ -10,20 +10,23 @@ class Command:
 		self.name = name;
 		self.prog = prog;
 		self.help = help;
+		self.options = [];
 	
-	def addOption(self, name, default, help):
-		self.options.append(Option(name, default, help));
+	def addOption(self, name, default, help, type=str, optional=True):
+		self.options.append(Option(name, default, help, type, optional));
 		
 	
 class Option:
 	name = None;
 	default = None;
+	type = str;
 	help = None;
 	optional = True;
 	
-	def __init__(self, name, default, help, optional=True):
+	def __init__(self, name, default, help, type=str, optional=True):
 		self.name = name;
 		self.default = default;
+		self.type	= type;
 		self.help = help;
 		self.optional	= optional;
 

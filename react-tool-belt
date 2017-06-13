@@ -3,8 +3,8 @@ import sys
 import os
 import argparse
 import subprocess
+import command
 
-from CommandHelper import Command,Option,CommandList
 
 libDir = os.path.dirname(os.path.realpath(__file__));
 SUB_PARSER_NAME = 'subparser_name';
@@ -17,7 +17,10 @@ def callCmd(cmd, ns):
 		try:
 			name = opt.name.replace('-', '');
 			value = ns[name];
-			commandList.append(opt.getName()+' '+value);
+			
+			if value :
+				commandList.append(opt.getName());
+				commandList.append(value);
 		except Exception as e:
 			print opt.name+' do not exists'
 			print e;
@@ -28,21 +31,14 @@ def callCmd(cmd, ns):
 parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
 subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME);
 
-cmdList = CommandList();
-
-cmdReverse = Command('reverse', 'Reverse', 'Call adb reverse PROTOCOL:PORT PROTOCOL:PORT');
-cmdReverse.addOption('port', '8081', 'port to reverse');
-cmdReverse.addOption('protocol', 'tcp', 'protocol to reverse');
-cmdList.add(cmdReverse);
-
-for cmd in cmdList.list :
+for cmd in command.list.list :
 	subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help);
 	for opt in cmd.options :
-		subCmd.add_argument(opt.getName(), action='store', default=opt.default, help=opt.help);
+		subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help);
 
 
 args = parser.parse_args();
-selected = cmdList.find(args.subparser_name);
+selected = command.list.find(args.subparser_name);
 
 if selected!=None :
 	ns = vars(args);

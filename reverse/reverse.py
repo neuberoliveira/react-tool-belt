@@ -1,8 +1,14 @@
+import sys
 import subprocess
 import argparse
+from os import path
 
-parser = argparse.ArgumentParser(prog='Reverse', description='Call adb reverse tcp:8081 tcp:8081')
-#args = parser.parse_args()
+sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+import command
 
-subprocess.call(["adb", "reverse", "tcp:8081", "tcp:8081"]);
+args = command.createCommand('reverse');
+
+
+host = args.protocol+':'+args.port;
+subprocess.call(["adb", "reverse", host, host]);
 print 'done'
