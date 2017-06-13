@@ -33,5 +33,11 @@ def createCommand(name):
 	
 
 def checkReactProject():
-	return True;
+	isReacNative = True;
+	
+	if not isReacNative :
+		print 'Are you sure you are in a React Native project?';
+		sys.exit();
+		
+	return isReacNative;
 	
