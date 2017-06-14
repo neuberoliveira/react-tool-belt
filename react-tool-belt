@@ -3,45 +3,31 @@ import sys
 import os
 import argparse
 import subprocess
-import command
+from lib import commandCreator
 
+#project modules import
+from reverse import reverse
+from resource import resource
 
-libDir = os.path.dirname(os.path.realpath(__file__));
+rootDir = os.path.dirname(os.path.realpath(__file__));
 SUB_PARSER_NAME = 'subparser_name';
 
-def callCmd(cmd, ns):
-	cmdPath = libDir+"/"+cmd.name+"/"+cmd.name+".py";
-	commandList =["python", cmdPath];
-	
-	for opt in cmd.options:
-		try:
-			name = opt.name.replace('-', '');
-			value = ns[name];
-			
-			if value :
-				commandList.append(opt.getName());
-				commandList.append(value);
-		except Exception as e:
-			print opt.name+' do not exists'
-			print e;
-	
-	#print commandList;
-	subprocess.call(commandList);
-	
 parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
 subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME);
 
-for cmd in command.list.list :
+for cmd in commandCreator.list.list :
 	subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help);
 	for opt in cmd.options :
 		subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help);
 
 
 args = parser.parse_args();
-selected = command.list.find(args.subparser_name);
+selected = commandCreator.list.find(args.subparser_name);
 
 if selected!=None :
 	ns = vars(args);
-	callCmd(selected, ns);
+	symbols = locals();
+	module = symbols[selected.name];
+	getattr(module, 'execute')(args);
 else :
 	print 'Ops!';

@@ -6,36 +6,11 @@ import imghdr
 import json
 from PIL import Image
 
-sys.path.append( os.path.dirname( os.path.dirname( os.path.abspath(__file__) ) ) )
-import command
+from lib import commandCreator
+from lib import reactHelper
 import sizemap
 
-args = command.createCommand('resource');
-filename = args.icon;
-availableFormats = ['png'];
-
-
-command.checkReactProject();
-
-if not filename :
-	print 'No file specified.'
-	sys.exit()
-	
-if not os.path.isfile(filename) :
-	print 'The file "'+filename+'" not exists or is not valid file';
-	sys.exit()
-
-format = imghdr.what(filename);
-image = None;
-
-try:
-	availableFormats.index(format);
-	image = Image.open(filename);
-except Exception as e:
-	print 'The image is not in valid format, formats available are: '+str(availableFormats);
-	sys.exit()
-
-
+		
 def generateAndroid():
 	platform = sizemap.icon['android'];
 	ext = platform['format'];
@@ -100,10 +75,33 @@ def generateIOS():
 		jsonHandler.close();
 		
 
-print "Generate Android icons";
-generateAndroid();
+def execute(args) :
+	filename = args.icon;
+	availableFormats = ['png'];
+	reactHelper.isProject();
 
-print "Generate IOS icons";
-generateIOS();
+	if not filename :
+		print 'No file specified.'
+		sys.exit()
+		
+	if not os.path.isfile(filename) :
+		print 'The file "'+filename+'" not exists or is not valid file';
+		sys.exit()
 
-print 'done';
+	format = imghdr.what(filename);
+	image = None;
+
+	try:
+		availableFormats.index(format);
+		image = Image.open(filename);
+	except Exception as e:
+		print 'The image is not in valid format, formats available are: '+str(availableFormats);
+		sys.exit()
+		
+	print "Generate Android icons";
+	generateAndroid();
+
+	print "Generate IOS icons";
+	generateIOS();
+
+	print 'done';
