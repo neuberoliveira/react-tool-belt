@@ -16,6 +16,7 @@ availableFormats = ['png'];
 
 
 command.checkReactProject();
+
 if not filename :
 	print 'No file specified.'
 	sys.exit()
@@ -55,8 +56,8 @@ def generateAndroid():
 
 
 def generateIOS():
-	#TODO read project name from package.json file in react native
-	projectName = 'CasalFit';
+	package = json.load(open('package.json'));
+	projectName = package['name'];
 	
 	platform 	= sizemap.icon['ios'];
 	ext 		= platform['format'];
@@ -102,7 +103,7 @@ def generateIOS():
 print "Generate Android icons";
 generateAndroid();
 
-#print "Generate IOS icons";
-#generateIOS();
+print "Generate IOS icons";
+generateIOS();
 
 print 'done';
