@@ -17,6 +17,12 @@ cmdResource = Command('resource', 'Resource', 'Generate app icon for ios and and
 cmdResource.addOption('icon', None, 'Path to icon file');
 list.add(cmdResource);
 
+cmdResource = Command('template', 'Template', 'Generate an class file with all the imports stuffs');
+cmdResource.addOption('name', None, 'Name of the class', str, False);
+cmdResource.addOption('path', None, 'Path to save the file, defaults to current directory');
+list.add(cmdResource);
+
+
 def createCommand(name):
 	cmd = list.find(name);
 	if not cmd :

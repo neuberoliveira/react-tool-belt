@@ -1,0 +1,17 @@
+/**
+ * @flow
+ */
+
+import React, { Component } from 'react';
+import {
+	AppRegistry,
+	View
+} from 'react-native';
+
+export default class #CLASS_NAME# extends Component {
+	render() {
+		return (
+			<View></View>
+		);
+	}
+}

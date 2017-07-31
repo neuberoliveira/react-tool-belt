@@ -8,6 +8,7 @@ from lib import commandCreator
 #project modules import
 from reverse import reverse
 from resource import resource
+from template import template
 
 rootDir = os.path.dirname(os.path.realpath(__file__));
 SUB_PARSER_NAME = 'subparser_name';
