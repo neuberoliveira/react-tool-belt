@@ -4,11 +4,16 @@
 
 import React, { Component } from 'react';
 import {
-	AppRegistry,
-	View
+	View,
+	Text,
+	Image,
 } from 'react-native';
 
 export default class #CLASS_NAME# extends Component {
+	constructor(props){
+		super(props);
+	}
+	
 	render() {
 		return (
 			<View></View>
