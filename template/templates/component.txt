@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 
 import React, { Component } from 'react';
 import {
@@ -8,15 +6,20 @@ import {
 	Text,
 	Image,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 export default class #CLASS_NAME# extends Component {
 	constructor(props){
 		super(props);
+		this.state = {}
 	}
-	
+
 	render() {
 		return (
 			<View></View>
 		);
 	}
 }
+
+#CLASS_NAME#.defaultProps = {}
+#CLASS_NAME#.propTypes = {}

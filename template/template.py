@@ -5,15 +5,18 @@ from lib import reactHelper
 
 def toCamelCase(name) :
 	camelCased = name;
-	camelCased = camelCased.replace('-', ' ');
-	camelCased = camelCased.replace('_', ' ');
-	camelCased = camelCased.title();
+
+	if '-' in name or '_' in name :
+		camelCased = camelCased.replace('-', ' ');
+		camelCased = camelCased.replace('_', ' ');
+		camelCased = camelCased.title();
+	
 	camelCased = camelCased.replace(' ', '');
 	
 	return camelCased;
 
 def execute(args) :
-	reactHelper.isProject();
+	#reactHelper.isProject();
 	scriptDir = os.path.dirname(os.path.abspath(__file__));
 	path = args.path;
 	filename = args.name;
