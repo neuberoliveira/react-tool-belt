@@ -1,1 +1,2 @@
-__all__ = ['resource'];
+from Resource import *
+

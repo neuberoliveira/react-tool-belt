@@ -3,32 +3,44 @@ import sys
 import os
 import argparse
 import subprocess
-from lib import commandCreator
 
 #project modules import
-from reverse import reverse
-from resource import resource
-from template import template
+from reverse import Reverse
+from resource import Resource
+from template import Template
 
-rootDir = os.path.dirname(os.path.realpath(__file__));
-SUB_PARSER_NAME = 'subparser_name';
+def findModule(name):
+    for mod in commands:
+        if mod.name == name:
+            return mod
 
-parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native');
-subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME);
+    return None
 
-for cmd in commandCreator.list.list :
-	subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help);
-	for opt in cmd.options :
-		subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help);
+commands = []
+
+commands.append(Reverse())
+commands.append(Resource())
+commands.append(Template())
 
 
-args = parser.parse_args();
-selected = commandCreator.list.find(args.subparser_name);
+rootDir = os.path.dirname(os.path.realpath(__file__))
+SUB_PARSER_NAME = 'subparser_name'
 
-if selected!=None :
-	ns = vars(args);
-	symbols = locals();
-	module = symbols[selected.name];
-	getattr(module, 'execute')(args);
-else :
-	print 'Ops!';
+parser = argparse.ArgumentParser(prog='React Tool Belt', description='Tool Belt for React Native')
+subparser = parser.add_subparsers(title='Sub Commands', metavar='list', dest=SUB_PARSER_NAME)
+
+for cmd in commands:
+    subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help)
+
+    for opt in cmd.getOptions():
+        subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help)
+
+
+args = parser.parse_args()
+
+module = findModule(args.subparser_name)
+
+if module!=None:
+    module.execute(args)
+else:
+    print 'Ops!'
