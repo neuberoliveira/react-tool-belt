@@ -4,7 +4,7 @@
 
 
 Todo list, any help will be appreciate.
-- [ ] Base template for create components
+- [x] Base template for create components
 - [x] Call `adb reverse`
 - [x] Generate icons
 	- [x] Android
