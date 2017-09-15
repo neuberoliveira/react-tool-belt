@@ -8,6 +8,7 @@ import subprocess
 from reverse import Reverse
 from resource import Resource
 from template import Template
+from build import Build
 
 def findModule(name):
     for mod in commands:
@@ -21,6 +22,7 @@ commands = []
 commands.append(Reverse())
 commands.append(Resource())
 commands.append(Template())
+commands.append(Build())
 
 
 rootDir = os.path.dirname(os.path.realpath(__file__))
