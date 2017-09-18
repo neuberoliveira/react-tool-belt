@@ -12,8 +12,8 @@ Todo list, any help will be appreciate.
 - [ ] Automate the build process
 	- Android
 		- [ ] Add keystore info
-		- [ ] Increment the `versionCode`
-		- [ ] Call `gradlew assembleRelease`
+		- [x] Increment the `versionCode`
+		- [x] Call `gradlew assembleRelease`
 	- IOS
 		- [ ] Increment the `CFBundleVersion` and set the `CFBundleShortVersionString`
 		- [ ] Archive the project
