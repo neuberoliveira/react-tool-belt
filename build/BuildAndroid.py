@@ -36,9 +36,8 @@ class BuildAndroid(BuildInterface):
 
     def runBuildScript(self):
         try:
-
-            code = 0
-            #code = subprocess.call(["./gradlew", "assembleRelease"], cwd="android")
+            #code = 0
+            code = subprocess.call(["./gradlew", "assembleRelease"], cwd="android")
             apkfile = './android/app/build/outputs/apk/app-release.apk'
             glogdirs = glob.glob('./node_modules/react-native/third-party/glog-*/')
 
