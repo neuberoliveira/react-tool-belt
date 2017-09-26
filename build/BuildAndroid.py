@@ -26,24 +26,23 @@ class BuildAndroid(BuildInterface):
         if versionMatch:
             fullMatch = versionMatch.group(0);
             self.configContent = self.configContent.replace(fullMatch, 'versionName "'+version+'"')
-            print self.configContent
     
-    def setBuildVersion(self, build):
+    def setBuildVersion(self):
         buildMatch = re.search('versionCode (\d+)', self.configContent)
         if buildMatch:
             fullMatch = buildMatch.group(0);
-            self.configContent = self.configContent.replace(fullMatch, 'versionCode '+str(build))
+            self.configContent = self.configContent.replace(fullMatch, 'versionCode '+str(self.buildVersion))
 
     def runBuildScript(self):
         try:
             #code = 0
-            code = subprocess.call(["./gradlew", "assembleRelease"], cwd="android")
             apkfile = './android/app/build/outputs/apk/app-release.apk'
             glogdirs = glob.glob('./node_modules/react-native/third-party/glog-*/')
 
             for glog in glogdirs:
                 shutil.rmtree(glog)
-
+            
+            code = subprocess.call(["./gradlew", "assembleRelease"], cwd="android")
 
             if code == 0:
                 filename = ''
@@ -53,7 +52,7 @@ class BuildAndroid(BuildInterface):
                     dirname = os.path.dirname(self.output)
                 else:
                     dirname = self.output
-                    filename = 'release_v'+self.versionName+'-b'+str(self.buildVersion)+'.apk'
+                    filename = 'release_android_v'+self.versionName+'-b'+str(self.buildVersion)+'.apk'
 
                 dirname = dirname+'/'
                 newApkPath = dirname+filename

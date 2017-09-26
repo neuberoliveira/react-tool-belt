@@ -21,7 +21,7 @@ class BuildInterface(object):
     def extractInfo(self):
         raise NotImplementedError("extractInfo method must be implemented")
 
-    def setBuildVersion(self, buildNum):
+    def setBuildVersion(self):
         raise NotImplementedError("setBuildVersion method must be implemented")
 
     def setBuildName(self, version):
@@ -31,9 +31,11 @@ class BuildInterface(object):
         self.extractInfo()
         if self.incBuild or self.version:
             if self.incBuild:
-                self.setBuildVersion(self.buildVersion+1)
+                self.buildVersion = self.buildVersion+1;
+                self.setBuildVersion()
             
             if self.version:
+                self.versionName = self.version
                 self.setBuildName(self.version)
 
             configHandler = open(self.configFile, 'w+')

@@ -32,7 +32,6 @@ class Build(ModuleInterface):
         if self.isBoth():
             androidBuilder.build();
 
-        print args.inc
         print 'done'
 
     def isDroid(self):
@@ -44,14 +43,6 @@ class Build(ModuleInterface):
     def isBoth(self):
         return self.platform == PLATFORM_BOTH
     
-    def buildDroid(self, inc, version):
-        if inc:
-            self.incBuild()
-
-        os.chdir("android")
-        subprocess.call(["./gradlew", "assembleRelease"])
-        print('done');
-
     def str2bool(self, v):
         if v.lower() in ('yes', 'true', 't', 'y', '1'):
             return True
