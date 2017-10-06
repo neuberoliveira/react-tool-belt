@@ -2,9 +2,10 @@ import os
 import re
 
 class BuildInterface(object):
-    def __init__(self, inc, version, configPath):
+    def __init__(self, app_name, inc, version, configPath):
         self.version = version
         self.incBuild = inc
+        self.appName = app_name
         
         self.configFile = os.getcwd()+'/'+configPath
         
@@ -26,6 +27,9 @@ class BuildInterface(object):
 
     def setBuildName(self, version):
         raise NotImplementedError("setBuildName method must be implemented")
+    
+    def beforeSaveConfig(self):
+        pass
 
     def build(self):
         self.extractInfo()
@@ -37,7 +41,8 @@ class BuildInterface(object):
             if self.version:
                 self.versionName = self.version
                 self.setBuildName(self.version)
-
+            
+            self.beforeSaveConfig()
             configHandler = open(self.configFile, 'w+')
             configHandler.write(self.configContent)
             configHandler.close()

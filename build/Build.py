@@ -2,10 +2,12 @@ import sys
 import subprocess
 import argparse
 import os
+import json
 
 from lib import ModuleInterface
 from lib import reactHelper
 from BuildAndroid import BuildAndroid 
+from BuildIOS import BuildIOS 
 
 PLATFORM_BOTH = 'both'
 PLATFORM_ANDROID = 'android'
@@ -21,17 +23,26 @@ class Build(ModuleInterface):
         self.addOption('os', PLATFORM_BOTH, 'build only the platform especific (android,ios)', str)
         self.addOption('inc', 'yes', 'automaticaly increment the build number by 1', str)
         self.addOption('version', None, 'set the version name', str)
-        self.addOption('apk', None, 'path to move apk after build it (android ONLY)', str)
+        self.addOption('output', None, 'path to move binary to', str)
 
     def execute(self, args):
         self.platform = args.os
         reactHelper.isProject()
+        packageJson = json.load(open('./package.json'));
         needInc = self.str2bool(args.inc)
-        androidBuilder = BuildAndroid(needInc, args.version, args.apk)
+        androidBuilder = BuildAndroid(packageJson['name'], needInc, args.version, args.output)
+        iosBuilder = BuildIOS(packageJson['name'], needInc, args.version, args.output)
 
         if self.isBoth():
+            iosBuilder.build();
             androidBuilder.build();
-
+        elif self.isDroid():
+            androidBuilder.build();
+        elif self.isIOS():
+            iosBuilder.build();
+        else:
+            print "Unavailable platform '"+self.platform+"' choose one of both, android, ios"
+        
         print 'done'
 
     def isDroid(self):

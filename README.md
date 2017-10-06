@@ -9,12 +9,12 @@ Todo list, any help will be appreciate.
 - [x] Generate icons
 	- [x] Android
 	- [x] IOS
-- [ ] Automate the build process
+- [x] Automate the build process
 	- Android
 		- [ ] Add keystore info
 		- [x] Increment the `versionCode`
 		- [x] Call `gradlew assembleRelease`
 	- IOS
-		- [ ] Increment the `CFBundleVersion` and set the `CFBundleShortVersionString`
-		- [ ] Archive the project
-			- [ ] If possible output an IPA too.
+		- [x] Increment the `CFBundleVersion` and set the `CFBundleShortVersionString`
+		- [x] Archive the project
+			- [x] If possible output an IPA too.

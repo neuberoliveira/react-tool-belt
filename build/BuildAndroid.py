@@ -7,8 +7,8 @@ import subprocess
 from BuildInterface import BuildInterface
 
 class BuildAndroid(BuildInterface):
-    def __init__(self, inc, version, apkout):
-        super(BuildAndroid, self).__init__(inc, version, "/android/app/build.gradle")
+    def __init__(self, app_name, inc, version, apkout):
+        super(BuildAndroid, self).__init__(app_name, inc, version, "/android/app/build.gradle")
         self.output = apkout
         
     def extractInfo(self):
@@ -44,7 +44,7 @@ class BuildAndroid(BuildInterface):
             
             code = subprocess.call(["./gradlew", "assembleRelease"], cwd="android")
 
-            if code == 0:
+            if code == 0 and self.output:
                 filename = ''
                 dirname = ''
                 if re.search('\.apk', self.output):
@@ -52,7 +52,7 @@ class BuildAndroid(BuildInterface):
                     dirname = os.path.dirname(self.output)
                 else:
                     dirname = self.output
-                    filename = 'release_android_v'+self.versionName+'-b'+str(self.buildVersion)+'.apk'
+                    filename = self.appName+'_v'+self.versionName+'-b'+str(self.buildVersion)+'.apk'
 
                 dirname = dirname+'/'
                 newApkPath = dirname+filename
