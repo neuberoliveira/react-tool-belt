@@ -7,8 +7,8 @@ class ModuleInterface(object):
         self.help = None
         self.options = []
 
-    def addOption(self, name, default, help, type=str, optional=True):
-        self.options.append(Option(name, default, help, type, optional))
+    def addOption(self, name, shortname, default, help, type=str):
+        self.options.append(Option(name, shortname, default, help, type))
 
     def getOptions(self):
         return self.options;

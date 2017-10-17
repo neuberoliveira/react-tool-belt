@@ -11,8 +11,8 @@ class Template(ModuleInterface):
         self.prog = 'Template'
         self.help = 'Generate an class file with all the imports stuffs'
 
-        self.addOption('name', None, 'Name of the class', str, False)
-        self.addOption('path', None, 'Path to save the file, defaults to current directory')
+        self.addOption('path', None, None, 'Path to save the file, defaults to current directory')
+        self.addOption('--name', '-n', None, 'Name of the class', str)
 
     def _toCamelCase(self, name):
         camelCased = name
