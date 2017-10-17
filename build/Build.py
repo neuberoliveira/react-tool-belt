@@ -20,10 +20,10 @@ class Build(ModuleInterface):
         self.prog = 'Build'
         self.help = 'Build the app for release'
 
-        self.addOption('os', PLATFORM_BOTH, 'build only the platform especific (android,ios)', str)
-        self.addOption('inc', 'yes', 'automaticaly increment the build number by 1', str)
-        self.addOption('version', None, 'set the version name', str)
-        self.addOption('output', None, 'path to move binary to', str)
+        self.addOption('output', None, os.getcwd(), 'path to move binary to', str)
+        self.addOption('--inc', '-i', 'yes', 'automaticaly increment the build number by 1. Values could be "yes" or "no", default is "yes"', str)
+        self.addOption('--os', '-o', PLATFORM_BOTH, 'build only the platform especific (android,ios)', str)
+        self.addOption('--version', '-v', None, 'set the version name', str)
 
     def execute(self, args):
         self.platform = args.os

@@ -35,7 +35,11 @@ for cmd in commands:
     subCmd = subparser.add_parser(cmd.name, prog=cmd.prog, help=cmd.help)
 
     for opt in cmd.getOptions():
-        subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help)
+        #print opt.getName(), 'store', opt.type, opt.default, opt.help
+        if opt.isPositional() :
+            subCmd.add_argument(opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help)
+        else:
+            subCmd.add_argument(opt.getShortName(), opt.getName(), action='store', type=opt.type, default=opt.default, help=opt.help)
 
 
 args = parser.parse_args()

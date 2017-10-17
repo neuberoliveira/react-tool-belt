@@ -12,8 +12,8 @@ class Reverse(ModuleInterface):
         self.prog = 'Reverse'
         self.help = 'Call adb reverse PROTOCOL:PORT PROTOCOL:PORT'
         
-        self.addOption('port', '8081', 'port to reverse')
-        self.addOption('protocol', 'tcp', 'protocol to reverse')
+        self.addOption('port', None, '8081', 'port to reverse')
+        self.addOption('protocol', None, 'tcp', 'protocol to reverse')
 
     def execute(self, args):
         host = args.protocol+':'+args.port

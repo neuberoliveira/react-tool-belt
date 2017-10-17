@@ -1,24 +1,21 @@
 import subprocess
 
 class Option(object):
-    def __init__(self, name, default, help, type=str, optional=True):
+    def __init__(self, name, shortname, default, help, type=str):
         self.name = name
+        self.shortname = shortname
         self.default = default
         self.type	= type
         self.help = help
-        self.optional	= optional
 
     def getName(self, shortname=False):
-        if self.optional :
-            return  self._getShortName() if shortname else self._getFullName()
-        else:
-            return self.name
+        return self.name
     
-    def _getFullName(self):
-        return '--'+self.name
+    def getShortName(self):
+        return self.shortname
     
-    def _getShortName(self):
-        return '-'+self.name.substr(0, 1)
+    def isPositional(self):
+        return True if self.shortname==None else False
 
 
 class CommandList(object):

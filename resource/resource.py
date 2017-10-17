@@ -17,7 +17,7 @@ class Resource(ModuleInterface):
         self.prog = 'Resource'
         self.help = 'Generate app icon for ios and android. Image must be 1024px'
 
-        self.addOption('icon', None, 'Path to icon file')
+        self.addOption('icon', None, None, 'Path to icon file')
 
     def _generateAndroid(self, image):
         platform = sizemap.icon['android']
