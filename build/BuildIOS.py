@@ -55,8 +55,13 @@ class BuildIOS(BuildInterface):
     def runBuildScript(self):
         
         try:
-            FNULL = open(os.devnull, 'w')
             scriptdir = os.path.dirname(os.path.realpath(__file__))
+            
+            #archive
+            print 'Archive project'
+            archivecode = subprocess.call(["xcodebuild", "-scheme", self.appName, "archive"], cwd="ios")
+            
+            #format dates
             date = datetime.datetime.now()
             separator = "-"
             date_year = str(date.year)
@@ -64,15 +69,11 @@ class BuildIOS(BuildInterface):
             date_day = str(date.day).rjust(2, '0')
             
             todaydir = date_year+separator+date_month+separator+date_day
-            todayfile = date_day+separator+date_month+separator+date_year[2:]
-            
-            #archive
-            print 'Archive project...'
-            archivecode = subprocess.call(["xcodebuild", "-scheme", self.appName, "archive"], cwd="ios", stdout=FNULL)
-            
+            todayfileYearFull = date_day+separator+date_month+separator+date_year
+            todayfileYear = date_day+separator+date_month+separator+date_year[2:]
+
             archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
-            pattern = archivepath+self.appName+" "+todayfile+"*"
-            archives = glob.glob(pattern)
+            archives = glob.glob(archivepath+self.appName+" "+todayfileYear+"*") + glob.glob(archivepath+self.appName+" "+todayfileYearFull+"*")
             
             if archivecode==0 and len(archives)>0:
                 print 'Archive OK'
