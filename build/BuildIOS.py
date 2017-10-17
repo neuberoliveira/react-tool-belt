@@ -55,6 +55,7 @@ class BuildIOS(BuildInterface):
     def runBuildScript(self):
         
         try:
+            FNULL = open(os.devnull, 'w')
             scriptdir = os.path.dirname(os.path.realpath(__file__))
             date = datetime.datetime.now()
             separator = "-"
@@ -66,27 +67,29 @@ class BuildIOS(BuildInterface):
             todayfile = date_day+separator+date_month+separator+date_year[2:]
             
             #archive
-            print 'Archive project'
-            archivecode = subprocess.call(["xcodebuild", "-scheme", self.appName, "archive"], cwd="ios")
+            print 'Archive project...'
+            archivecode = subprocess.call(["xcodebuild", "-scheme", self.appName, "archive"], cwd="ios", stdout=FNULL)
             
             archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
             pattern = archivepath+self.appName+" "+todayfile+"*"
             archives = glob.glob(pattern)
             
             if archivecode==0 and len(archives)>0:
+                print 'Archive OK'
                 archivefile = archives[-1]
                 #ipaname = self.appName+'_v'+self.versionName+'-b'+str(self.buildVersion)+'.ipa'
                 
                 #export IPA
-                print 'Generating IPA'
+                print 'Generating IPA...'
                 exportcode = subprocess.call(["xcodebuild", "-exportArchive", 
                     "-archivePath", archivefile,
                     "-exportPath", self.ipaout,
                     "-exportOptionsPlist", scriptdir+"/exportOptions.plist"
-                ], cwd="ios")
+                ], cwd="ios", stdout=FNULL)
                 
                 if exportcode==0:
-                    print 'IPA moved to '+self.ipaout
+                    #print 'IPA moved to '+self.ipaout
+                    print 'IPA OK'
 
         except subprocess.CalledProcessError as spex:
             print spex.returncode

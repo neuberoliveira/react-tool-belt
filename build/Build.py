@@ -34,8 +34,8 @@ class Build(ModuleInterface):
         iosBuilder = BuildIOS(packageJson['name'], needInc, args.version, args.output)
 
         if self.isBoth():
-            iosBuilder.build();
             androidBuilder.build();
+            iosBuilder.build();
         elif self.isDroid():
             androidBuilder.build();
         elif self.isIOS():
