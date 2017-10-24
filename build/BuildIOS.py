@@ -55,11 +55,21 @@ class BuildIOS(BuildInterface):
     def runBuildScript(self):
         
         try:
+            FNULL = open(os.devnull, 'w')
+            wsPodName = self.appName+'.xcworkspace'
             scriptdir = os.path.dirname(os.path.realpath(__file__))
             
             #archive
             print 'Archive project'
-            archivecode = subprocess.call(["xcodebuild", "-scheme", self.appName, "archive"], cwd="ios")
+            
+            #verify if a xcworkspace, normaly created from pods, exists and use is as workspace to archive
+            archiveCmd = ["xcodebuild", "-scheme", self.appName];
+            if os.path.isdir('./ios/'+wsPodName) :
+                archiveCmd.append('-workspace')
+                archiveCmd.append(wsPodName)
+            
+            archiveCmd.append('archive')
+            archivecode = subprocess.call(archiveCmd, cwd="ios", stdout=FNULL)
             
             #format dates
             date = datetime.datetime.now()
