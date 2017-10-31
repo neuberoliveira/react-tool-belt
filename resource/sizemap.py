@@ -41,6 +41,18 @@ icon = {
 		'format': 'png',
 		'sizes': [
 			{
+				'size': 1024,
+				'name': 'appstore',
+				'idiom' : 'ios-marketing',
+				'scale' : 1,
+			},
+			{
+				'size': 1024,
+				'name': 'appstore',
+				'idiom' : 'ipad-marketing',
+				'scale' : 1,
+			},
+			{
 				'size': 20,
 				'name': 'icon-20',
 				'idiom' : 'ipad',
@@ -54,13 +66,13 @@ icon = {
 			},
 			{
 				'size': 20,
-				'name': 'icon-20',
+				'name': 'icon-20@2x',
 				'idiom' : 'iphone',
 				'scale' : 2,
 			},
 			{
 				'size': 20,
-				'name': 'icon-20',
+				'name': 'icon-20@3x',
 				'idiom' : 'iphone',
 				'scale' : 3,
 			},
