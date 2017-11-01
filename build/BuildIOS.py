@@ -71,8 +71,8 @@ class BuildIOS(BuildInterface):
                 archiveCmd.append(wsPodName)
             
             archiveCmd.append('archive')
-            #archivecode = subprocess.call(archiveCmd, cwd="ios", stdout=FNULL)
-            archivecode = 0
+            archivecode = subprocess.call(archiveCmd, cwd="ios", stdout=FNULL)
+            #archivecode = 0
             
             #format dates
             date = datetime.datetime.now()
@@ -85,11 +85,11 @@ class BuildIOS(BuildInterface):
             todayfileYearFull = date_day+separator+date_month+separator+date_year
             todayfileYear = date_day+separator+date_month+separator+date_year[2:]
 
-            #archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
-            archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/2017-10-31/"
+            archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
+            #archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/2017-10-31/"
             
-            #archives = glob.glob(archivepath+self.appName+" "+todayfileYear+"*") + glob.glob(archivepath+self.appName+" "+todayfileYearFull+"*")
-            archives = glob.glob(archivepath+self.appName+"*")
+            archives = glob.glob(archivepath+self.appName+" "+todayfileYear+"*") + glob.glob(archivepath+self.appName+" "+todayfileYearFull+"*")
+            #archives = glob.glob(archivepath+self.appName+"*")
             
             if archivecode==0 and len(archives)>0:
                 print 'Archive OK'
@@ -114,7 +114,6 @@ class BuildIOS(BuildInterface):
                 exportHandler.write(exportTemplate)
                 exportHandler.close()
                 
-                print tmpPath
                 #export IPA
                 print 'Generating IPA...'
                 exportcode = subprocess.call(["xcodebuild", "-exportArchive", 
