@@ -1,0 +1,21 @@
+<plist version="1.0">
+  <dict>
+    <key>method</key>
+    <string>app-store</string>
+    
+    <key>signingCertificate</key>
+    <string>iPhone Distribution</string>
+    
+    <key>uploadBitcode</key>
+    <true/>
+    
+    <key>uploadSymbols</key>
+    <true/>
+    
+    <key>provisioningProfiles</key>
+    <dict>
+      <key>%BUNDLE_ID%</key>
+      <string>%PROVISIONING_PROFILE%</string>
+    </dict>
+  </dict>
+</plist>

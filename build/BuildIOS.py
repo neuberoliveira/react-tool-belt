@@ -7,6 +7,7 @@ import errno
 import subprocess
 import datetime
 import getpass
+import tempfile
 import xml.etree.ElementTree as ET
 from BuildInterface import BuildInterface
 
@@ -18,7 +19,8 @@ class BuildIOS(BuildInterface):
         self.ipaout = ipaout
         self.CFBundleVersion_index = -1
         self.CFBundleShortVersionString_index = -1
-
+        self.pbxprojHandler = open(os.getcwd() + '/ios/' + app_name + '.xcodeproj/project.pbxproj', 'r')
+        
 
     def extractInfo(self):
         bundleVersion = 0
@@ -69,7 +71,8 @@ class BuildIOS(BuildInterface):
                 archiveCmd.append(wsPodName)
             
             archiveCmd.append('archive')
-            archivecode = subprocess.call(archiveCmd, cwd="ios", stdout=FNULL)
+            #archivecode = subprocess.call(archiveCmd, cwd="ios", stdout=FNULL)
+            archivecode = 0
             
             #format dates
             date = datetime.datetime.now()
@@ -82,26 +85,52 @@ class BuildIOS(BuildInterface):
             todayfileYearFull = date_day+separator+date_month+separator+date_year
             todayfileYear = date_day+separator+date_month+separator+date_year[2:]
 
-            archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
-            archives = glob.glob(archivepath+self.appName+" "+todayfileYear+"*") + glob.glob(archivepath+self.appName+" "+todayfileYearFull+"*")
+            #archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/"+todaydir+"/"
+            archivepath = os.getenv("HOME")+"/Library/Developer/Xcode/Archives/2017-10-31/"
+            
+            #archives = glob.glob(archivepath+self.appName+" "+todayfileYear+"*") + glob.glob(archivepath+self.appName+" "+todayfileYearFull+"*")
+            archives = glob.glob(archivepath+self.appName+"*")
             
             if archivecode==0 and len(archives)>0:
                 print 'Archive OK'
                 archivefile = archives[-1]
                 #ipaname = self.appName+'_v'+self.versionName+'-b'+str(self.buildVersion)+'.ipa'
                 
+                #generate exportOptions
+                print 'Generating Export Options...'
+                provisioningInfo = self.getProvisioningName()
+                tmpDir = tempfile.gettempdir()
+                tmpfileName = self.appName+'_exportoptions.plist'
+                tmpPath = tmpDir+'/'+tmpfileName
+                
+                exportTemplateHandler = open(scriptdir+"/ExportOptions_template.plist", 'r')
+                exportHandler = open(tmpPath, 'w+')
+                
+                exportTemplate = exportTemplateHandler.read();
+                
+                exportTemplate = exportTemplate.replace('%BUNDLE_ID%', self.getBundleId())
+                exportTemplate = exportTemplate.replace('%PROVISIONING_PROFILE%', provisioningInfo[0])
+                
+                exportHandler.write(exportTemplate)
+                exportHandler.close()
+                
+                print tmpPath
                 #export IPA
                 print 'Generating IPA...'
                 exportcode = subprocess.call(["xcodebuild", "-exportArchive", 
                     "-archivePath", archivefile,
                     "-exportPath", self.ipaout,
-                    "-exportOptionsPlist", scriptdir+"/exportOptions.plist"
+                    "-allowProvisioningUpdates",
+                    "-exportOptionsPlist", tmpPath,
                 ], cwd="ios", stdout=FNULL)
                 
                 if exportcode==0:
                     #print 'IPA moved to '+self.ipaout
                     print 'IPA OK'
-
+            
+            
+            exportTemplateHandler.close()
+            self.pbxprojHandler.close()
         except subprocess.CalledProcessError as spex:
             print spex.returncode
             print spex.output
@@ -109,3 +138,42 @@ class BuildIOS(BuildInterface):
         except OSError as ioex:
             print ioex.errno
             print ioex.strerror
+
+    def getProvisioningName(self):
+        prov_name = None
+        prov_uuid = None
+                
+        foundProvisioning = False
+        foundRelease = False
+        for line in self.pbxprojHandler.readlines():
+            matches = re.findall('PROVISIONING_PROFILE(_SPECIFIER)?\s=\s"(.*)";', line)
+            matcheRelease = re.search('name = Release;', line)
+            if matches :
+                foundProvisioning = True
+                
+                key = matches[0][0]
+                value = matches[0][1]
+                if key == '_SPECIFIER':
+                    prov_name = value
+                else :
+                    prov_uuid = value
+                
+                
+            if foundProvisioning and matcheRelease :
+                foundRelease = True
+                break
+        
+        if foundProvisioning and foundRelease :
+            return (prov_uuid, prov_name)
+        else:
+            return None
+    
+    def getBundleId(self):
+        self.pbxprojHandler.seek(0);
+        match = re.search('PRODUCT_BUNDLE_IDENTIFIER = (.*);', self.pbxprojHandler.read())
+        if match:
+            return match.group(1)
+        
+        
+        
+        
