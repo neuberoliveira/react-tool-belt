@@ -5,6 +5,7 @@ import argparse
 import imghdr
 import json
 from PIL import Image
+from PIL import ImageDraw
 
 from lib import reactHelper
 from lib import ModuleInterface
@@ -29,15 +30,35 @@ class Resource(ModuleInterface):
             name = item['name']
 
             drawableDir = platform['basedir']+dir
-            destinationPath = drawableDir+name+'.'+ext
+            pathWithName = drawableDir+name
+            destinationPath = pathWithName+'.'+ext
 
             if not os.path.exists(drawableDir):
                 os.makedirs(drawableDir)
 
             tmpImage = image.resize((size, size), resample=Image.LANCZOS)
             tmpImage.save(destinationPath, format=ext, quality=100)
+            self._generateAndroidRound(image, pathWithName, ext, size)
 
-
+    def _generateAndroidRound(self, image, pathWithName, ext, size):
+        rad = size/2
+        tmpImage = image.resize((size, size), resample=Image.LANCZOS)
+        w, h = tmpImage.size
+        
+        
+        circle = Image.new('L', (rad * 2, rad * 2), 0)
+        draw = ImageDraw.Draw(circle)
+        draw.ellipse((0, 0, rad * 2, rad * 2), fill=255)
+        alpha = Image.new('L', tmpImage.size, "white")
+        
+        alpha.paste(circle.crop((0, 0, rad, rad)), (0, 0))
+        alpha.paste(circle.crop((0, rad, rad, rad * 2)), (0, h - rad))
+        alpha.paste(circle.crop((rad, 0, rad * 2, rad)), (w - rad, 0))
+        alpha.paste(circle.crop((rad, rad, rad * 2, rad * 2)), (w - rad, h - rad))
+        
+        tmpImage.putalpha(alpha)
+        tmpImage.save(pathWithName+'_round.'+ext, format=ext, quality=100)
+    
     def _generateIOS(self, image):
         package = json.load(open('package.json'))
         projectName = package['name']
