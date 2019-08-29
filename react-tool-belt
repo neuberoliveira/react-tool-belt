@@ -22,7 +22,7 @@ commands = []
 commands.append(Reverse())
 commands.append(Resource())
 commands.append(Template())
-commands.append(Build())
+# commands.append(Build())
 
 
 rootDir = os.path.dirname(os.path.realpath(__file__))
