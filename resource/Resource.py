@@ -101,6 +101,7 @@ class Resource(ModuleInterface):
             tmpImage = image.resize((realsize, realsize), resample=Image.LANCZOS)
             try :
                 tmpImage.save(destinationPath, format=ext, compress_level=9)
+                print("created image "+destinationPath)
             except IOError:
                 print(destinationPath)
                 sys.exit()
