@@ -60,10 +60,13 @@ class Resource(ModuleInterface):
         tmpImage.save(pathWithName+'_round.'+ext, format=ext, quality=100)
     
     def _generateIOS(self, image):
-        package = json.load(open('package.json'))
-        projectName = package['name']
+        projectName = "Runner"
+        if os.path.exists('package.json'):
+            package = json.load(open('package.json'))
+            projectName = package['name']
 
         platform 	= sizemap.icon['ios']
+        
         ext 		= platform['format']
         basedir 	= platform['basedir'].replace('{{projectname}}', projectName)
 
@@ -96,7 +99,11 @@ class Resource(ModuleInterface):
                 os.makedirs(basedir)
 
             tmpImage = image.resize((realsize, realsize), resample=Image.LANCZOS)
-            tmpImage.save(destinationPath, format=ext, compress_level=9)
+            try :
+                tmpImage.save(destinationPath, format=ext, compress_level=9)
+            except IOError:
+                print(destinationPath)
+                sys.exit()
 
         formated = json.dumps(jsonStruct, sort_keys=False, indent=2, separators=(',', ': '))
         jsonHandler = open(basedir+'Contents.json', 'w+')

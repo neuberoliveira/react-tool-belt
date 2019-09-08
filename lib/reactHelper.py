@@ -8,17 +8,8 @@ appFile 	= 'app.json';
 def isProject():
 	isReacNative = False;
 
-	if os.path.exists(packageFile) :
-		checks = 0;
-		package = json.load(open(packageFile));
-		dependencies = package['dependencies'];
-
-		for pack in dependencies :
-			if pack=='react' or pack=='react-native' :
-				checks += 1;
-
-		if checks>=2 :
-			isReacNative = True;
+	if os.path.isdir('./ios') and os.path.isdir('./android') :
+		isReacNative = True;
 
 	if not isReacNative :
 		print 'Are you sure you are in a React Native project?';
